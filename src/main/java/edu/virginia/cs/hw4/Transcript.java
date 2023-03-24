@@ -11,4 +11,8 @@ public class Transcript {
         this.student = student;
         courseHistory = new HashMap<>();
     }
+
+    public Transcript(Map<Course, Grade> courseHistory){
+        this.courseHistory = courseHistory;
+    }
 }
