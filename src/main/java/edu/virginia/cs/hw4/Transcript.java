@@ -9,6 +9,13 @@ public class Transcript {
 
     public Transcript(Student student) {
         this.student = student;
-        courseHistory = new HashMap<>();
+        this.courseHistory = new HashMap<>();
+    }
+    public Transcript(Student student, Map<Course,Grade> courseHistory) {
+        this.student = student;
+        this.courseHistory = courseHistory;
+    }
+    public void addCourse(Course course, Grade grade){
+        courseHistory.put(course, grade);
     }
 }

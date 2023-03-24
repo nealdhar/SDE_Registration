@@ -46,7 +46,7 @@ public class Student {
     }
 
     public void addCourseGrade(Course course, Grade grade) {
-        transcript.courseHistory.put(course, grade);
+        transcript.addCourse(course, grade);
     }
 
     public boolean hasStudentTakenCourse(Course course) {
