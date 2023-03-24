@@ -18,4 +18,8 @@ public class Transcript {
     public void addCourse(Course course, Grade grade){
         courseHistory.put(course, grade);
     }
+
+    public Transcript(Map<Course, Grade> courseHistory){
+        this.courseHistory = courseHistory;
+    }
 }
