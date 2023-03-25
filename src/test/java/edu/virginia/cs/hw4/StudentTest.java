@@ -39,20 +39,28 @@ public class StudentTest {
     }
 
     @Test
-    public void hasStudentTakenCourse() {
+    public void testHasStudentTakenCourse() {
         testStudent.hasStudentTakenCourse(mockCourse);
         verify(mockCourseHistory).containsKey(mockCourse);
     }
 
     @Test
-    public void getCourseGrade() {
+    public void testGetCourseGradeWithoutTakingClass() {
+        when(testStudent.hasStudentTakenCourse(mockCourse)).thenReturn(false);
+        assertThrows(IllegalArgumentException.class, () ->
+                testStudent.getCourseGrade(mockCourse));
     }
 
     @Test
-    public void meetsPrerequisite() {
+    public void testGetCourseGradeWithTakingClass() {
+
     }
 
     @Test
-    public void getGPA() {
+    public void testMeetsPrerequisite() {
+    }
+
+    @Test
+    public void testGetGPA() {
     }
 }
