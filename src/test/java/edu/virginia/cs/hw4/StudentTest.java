@@ -53,7 +53,9 @@ public class StudentTest {
 
     @Test
     public void testGetCourseGradeWithTakingClass() {
-
+        when(testStudent.hasStudentTakenCourse(mockCourse)).thenReturn(true);
+        when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.A_MINUS);
+        assertEquals(Grade.A_MINUS, testStudent.getCourseGrade(mockCourse));
     }
 
     @Test
