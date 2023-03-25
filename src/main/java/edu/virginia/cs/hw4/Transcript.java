@@ -11,11 +11,18 @@ public class Transcript {
         this.student = student;
         this.courseHistory = new HashMap<>();
     }
-    public Transcript(Student student, Map<Course,Grade> courseHistory) {
-        this.student = student;
-        this.courseHistory = courseHistory;
-    }
     public void addCourse(Course course, Grade grade){
         courseHistory.put(course, grade);
+    }
+
+    public Transcript(Map<Course, Grade> courseHistory){
+        this.courseHistory = courseHistory;
+    }
+
+    public boolean hasCourse(Course course) {
+        if(this.courseHistory.containsKey(course)) {
+            return true;
+        }
+        return false ;
     }
 }
