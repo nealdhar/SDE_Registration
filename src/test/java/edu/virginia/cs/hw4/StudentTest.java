@@ -11,25 +11,19 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class StudentTest {
+public class StudentTest {
 
     private Student testStudent ;
-
     private Transcript testTranscript;
-
-
     private Course mockCourse ;
-
     Map<Course, Grade> mockCourseHistory;
-
-
 
     @BeforeEach
     public void setUp(){
         mockCourseHistory = (Map<Course, Grade>) mock(Map.class);
         mockCourse = mock(Course.class);
+        testTranscript = new Transcript(testStudent, mockCourseHistory);
         testStudent = getStudent();
-        testTranscript = getTranscript();
     }
     private Transcript getTranscript() {
         return new Transcript(testStudent, mockCourseHistory);
@@ -46,6 +40,8 @@ class StudentTest {
 
     @Test
     public void hasStudentTakenCourse() {
+        testStudent.hasStudentTakenCourse(mockCourse);
+        verify(mockCourseHistory).containsKey(mockCourse);
     }
 
     @Test
