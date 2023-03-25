@@ -59,7 +59,26 @@ public class StudentTest {
     }
 
     @Test
-    public void testMeetsPrerequisite() {
+    public void testMeetsPrerequisiteWithNotTakingPrereq() {
+        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
+        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(false);
+        assertFalse(testStudent.meetsPrerequisite(prerequisite));
+    }
+
+    @Test
+    public void testMeetsPrerequisiteWithTakenClassNotReceivedMinGrade() {
+        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
+        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(true);
+        when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_MINUS);
+        assertFalse(testStudent.meetsPrerequisite(prerequisite));
+    }
+
+    @Test
+    public void testMeetsPrerequisiteWithAllConditionsMet() {
+        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
+        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(true);
+        when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_PLUS);
+        assertTrue(testStudent.meetsPrerequisite(prerequisite));
     }
 
     @Test
