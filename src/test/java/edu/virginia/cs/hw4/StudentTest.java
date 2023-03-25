@@ -22,7 +22,7 @@ public class StudentTest {
     public void setUp(){
         mockCourseHistory = (Map<Course, Grade>) mock(Map.class);
         mockCourse = mock(Course.class);
-        testTranscript = new Transcript(testStudent, mockCourseHistory);
+        testTranscript = getTranscript();
         testStudent = getStudent();
     }
     private Transcript getTranscript() {
@@ -86,5 +86,10 @@ public class StudentTest {
         when(mockCourseHistory.isEmpty()).thenReturn(true);
         assertThrows(IllegalStateException.class, () ->
                 testStudent.getGPA());
+    }
+    @Test
+    public void testGetGPA() {
+        testStudent.addCourseGrade(mockCourse, Grade.B_PLUS);
+        assertEquals(3.3, testStudent.getGPA(), 0.01);
     }
 }
