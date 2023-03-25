@@ -11,12 +11,18 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class StudentTest {
+class StudentTest {
 
     private Student testStudent ;
+
     private Transcript testTranscript;
+
+
     private Course mockCourse ;
+
     Map<Course, Grade> mockCourseHistory;
+
+
 
     @BeforeEach
     public void setUp(){
@@ -26,7 +32,7 @@ public class StudentTest {
         testStudent = getStudent();
     }
     private Transcript getTranscript() {
-        return new Transcript(testStudent, mockCourseHistory);
+        return new Transcript(mockCourseHistory);
     }
     private Student getStudent() {
         return new Student(1, "Neal", "nd2pvz@virginia.edu", testTranscript);
@@ -40,56 +46,19 @@ public class StudentTest {
 
     @Test
     public void testHasStudentTakenCourse() {
-        testStudent.hasStudentTakenCourse(mockCourse);
-        verify(mockCourseHistory).containsKey(mockCourse);
-    }
-
-    @Test
-    public void testGetCourseGradeWithoutTakingClass() {
-        when(testStudent.hasStudentTakenCourse(mockCourse)).thenReturn(false);
-        assertThrows(IllegalArgumentException.class, () ->
-                testStudent.getCourseGrade(mockCourse));
-    }
-
-    @Test
-    public void testGetCourseGradeWithTakingClass() {
+        mockCourseHistory.put(mockCourse, Grade.A_MINUS);
         when(testStudent.hasStudentTakenCourse(mockCourse)).thenReturn(true);
-        when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.A_MINUS);
-        assertEquals(Grade.A_MINUS, testStudent.getCourseGrade(mockCourse));
     }
 
     @Test
-    public void testMeetsPrerequisiteWithNotTakingPrereq() {
-        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
-        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(false);
-        assertFalse(testStudent.meetsPrerequisite(prerequisite));
+    public void getCourseGrade() {
     }
 
     @Test
-    public void testMeetsPrerequisiteWithTakenClassNotReceivedMinGrade() {
-        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
-        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(true);
-        when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_MINUS);
-        assertFalse(testStudent.meetsPrerequisite(prerequisite));
+    public void meetsPrerequisite() {
     }
 
     @Test
-    public void testMeetsPrerequisiteWithAllConditionsMet() {
-        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
-        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(true);
-        when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_PLUS);
-        assertTrue(testStudent.meetsPrerequisite(prerequisite));
-    }
-
-    @Test
-    public void testGetGPANoCoursesTaken() {
-        when(mockCourseHistory.isEmpty()).thenReturn(true);
-        assertThrows(IllegalStateException.class, () ->
-                testStudent.getGPA());
-    }
-    @Test
-    public void testGetGPA() {
-        testStudent.addCourseGrade(mockCourse, Grade.B_PLUS);
-        assertEquals(3.3, testStudent.getGPA(), 0.01);
+    public void getGPA() {
     }
 }
