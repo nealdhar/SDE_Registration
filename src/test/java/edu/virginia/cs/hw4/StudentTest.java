@@ -91,5 +91,6 @@ public class StudentTest {
     public void testGetGPA() {
         testStudent.addCourseGrade(mockCourse, Grade.B_PLUS);
         assertEquals(3.3, testStudent.getGPA(), 0.01);
+
     }
 }
