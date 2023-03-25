@@ -15,7 +15,8 @@ public class Transcript {
         courseHistory.put(course, grade);
     }
 
-    public Transcript(Map<Course, Grade> courseHistory){
+    public Transcript(Student student, Map<Course,Grade> courseHistory) {
+        this.student = student;
         this.courseHistory = courseHistory;
     }
 
