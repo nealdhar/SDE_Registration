@@ -55,7 +55,7 @@ public class Student {
 
     public Grade getCourseGrade(Course course) {
         if (hasStudentTakenCourse(course)) {
-            transcript.courseHistory.get(course);
+            return transcript.courseHistory.get(course);
         }
         throw new IllegalArgumentException("ERROR: Student has no grade for " + course);
     }
