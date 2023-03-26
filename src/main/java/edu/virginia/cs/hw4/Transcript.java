@@ -21,7 +21,10 @@ public class Transcript {
     }
 
     public boolean hasCourse(Course course) {
-        return this.courseHistory.containsKey(course);
+        if(this.courseHistory.containsKey(course)) {
+            return true;
+        }
+        return false ;
     }
     public Grade getCourseGrade(Course course) {
         if (hasCourse(course)) {
