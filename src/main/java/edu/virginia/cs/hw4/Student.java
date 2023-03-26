@@ -64,7 +64,7 @@ public class Student {
         if (!hasStudentTakenCourse(prerequisite.course)) {
             return false;
         }
-        Grade studentGrade = transcript.courseHistory.get(prerequisite.course);
+        Grade studentGrade = transcript.getCourseGrade(prerequisite.course);
         return studentGrade.gpa >= prerequisite.minimumGrade.gpa;
     }
 
