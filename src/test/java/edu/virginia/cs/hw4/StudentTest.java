@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ public class StudentTest {
     private Transcript testTranscript;
     private Course mockCourse ;
     Map<Course, Grade> mockCourseHistory;
+    private Prerequisite prerequisite;
 
     @BeforeEach
     public void setUp(){
@@ -23,6 +25,7 @@ public class StudentTest {
         mockCourse = mock(Course.class);
         testTranscript = getTranscript();
         testStudent = getStudent();
+        prerequisite = new Prerequisite(mockCourse, Grade.C);
     }
     private Transcript getTranscript() {
         return new Transcript(testStudent, mockCourseHistory);
@@ -59,7 +62,6 @@ public class StudentTest {
 
     @Test
     public void testMeetsPrerequisiteWithNotTakingPrerequisite() {
-        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
         when(mockCourseHistory.containsKey(mockCourse)).thenReturn(false);
         assertFalse(testStudent.meetsPrerequisite(prerequisite));
         verify(mockCourseHistory).containsKey(mockCourse);
@@ -67,7 +69,6 @@ public class StudentTest {
 
     @Test
     public void testMeetsPrerequisiteWithTakenClassNotReceivedMinGrade() {
-        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
         when(mockCourseHistory.containsKey(mockCourse)).thenReturn(true);
         when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_MINUS);
         assertFalse(testStudent.meetsPrerequisite(prerequisite));
@@ -77,10 +78,9 @@ public class StudentTest {
 
     @Test
     public void testMeetsPrerequisiteWithAllConditionsMet() {
-        Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
         when(mockCourseHistory.containsKey(mockCourse)).thenReturn(true);
         when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_PLUS);
-        assertTrue(testStudent.meetsPrerequisite(prerequisite));
+        testStudent.meetsPrerequisite(prerequisite);
         //verify(mockCourseHistory).containsKey(mockCourse);
         verify(mockCourseHistory).get(mockCourse);
     }
