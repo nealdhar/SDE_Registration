@@ -32,4 +32,18 @@ public class Transcript {
         }
         throw new IllegalArgumentException("ERROR: Student has no grade for " + course);
     }
+    public double getGPA() {
+        if (courseHistory.isEmpty()) {
+            throw new IllegalStateException("No courses taken, cannot get GPA");
+        }
+        double totalGradePoints = 0.0;
+        int creditsAttempted = 0;
+        for (Course course : courseHistory.keySet()) {
+            Grade grade = courseHistory.get(course);
+            int credits = course.getCreditHours();
+            totalGradePoints += grade.gpa * credits;
+            creditsAttempted += credits;
+        }
+        return totalGradePoints / creditsAttempted;
+    }
 }
