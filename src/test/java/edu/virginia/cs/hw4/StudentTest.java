@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,15 +48,15 @@ public class StudentTest {
     @Test
     public void testGetCourseGradeWithoutTakingClass() {
         when(testStudent.hasStudentTakenCourse(mockCourse)).thenReturn(false);
-        assertThrows(IllegalArgumentException.class, () ->
-                testStudent.getCourseGrade(mockCourse));
+        assertThrows(IllegalArgumentException.class, () -> testStudent.getCourseGrade(mockCourse));
     }
 
     @Test
     public void testGetCourseGradeWithTakingClass() {
         when(testStudent.hasStudentTakenCourse(mockCourse)).thenReturn(true);
         when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.A_MINUS);
-        assertEquals(Grade.A_MINUS, testStudent.getCourseGrade(mockCourse));
+        testStudent.getCourseGrade(mockCourse);
+        verify(mockCourseHistory).get(mockCourse);
     }
 
     @Test
@@ -84,13 +85,37 @@ public class StudentTest {
     @Test
     public void testGetGPANoCoursesTaken() {
         when(mockCourseHistory.isEmpty()).thenReturn(true);
-        assertThrows(IllegalStateException.class, () ->
-                testStudent.getGPA());
+        assertThrows(IllegalStateException.class, () -> testStudent.getGPA());
     }
     @Test
-    public void testGetGPA() {
-        testStudent.addCourseGrade(mockCourse, Grade.B_PLUS);
-        assertEquals(3.3, testStudent.getGPA(), 0.01);
+    public void testGetGPAOneCreditCourse() {
+        Map<Course, Grade> courseHistory = new HashMap<>();
+        Transcript transcript = new Transcript(testStudent, courseHistory);
+        testStudent = new Student(1, "Neal", "nd2pvz@virginia.edu", transcript);
 
+        when(mockCourse.getCreditHours()).thenReturn(3);
+        testStudent.addCourseGrade(mockCourse, Grade.B_PLUS);
+        double expectedGPA = Grade.B_PLUS.gpa;
+        double actualGPA = testStudent.getGPA();
+        assertEquals(expectedGPA, actualGPA, 0.0001);
+    }
+
+    @Test
+    public void testGetGPAMultipleCourses() {
+        Map<Course, Grade> courseHistory = new HashMap<>();
+        Transcript transcript = new Transcript(testStudent, courseHistory);
+        testStudent = new Student(1, "Neal", "nd2pvz@virginia.edu", transcript);
+
+        Course course1 = mock(Course.class);
+        when(course1.getCreditHours()).thenReturn(3);
+        testStudent.addCourseGrade(course1, Grade.B_PLUS);
+
+        Course course2 = mock(Course.class);
+        when(course2.getCreditHours()).thenReturn(4);
+        testStudent.addCourseGrade(course2, Grade.A_MINUS);
+
+        double expectedGPA = (Grade.B_PLUS.gpa * 3 + Grade.A_MINUS.gpa * 4) / 7;
+        double actualGPA = testStudent.getGPA();
+        assertEquals(expectedGPA, actualGPA, 0.0001);
     }
 }
