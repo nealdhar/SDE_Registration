@@ -3,10 +3,8 @@ package edu.virginia.cs.hw4;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,26 +58,31 @@ public class StudentTest {
     }
 
     @Test
-    public void testMeetsPrerequisiteWithNotTakingPrereq() {
+    public void testMeetsPrerequisiteWithNotTakingPrerequisite() {
         Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
-        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(false);
+        when(mockCourseHistory.containsKey(mockCourse)).thenReturn(false);
         assertFalse(testStudent.meetsPrerequisite(prerequisite));
+        verify(mockCourseHistory).containsKey(mockCourse);
     }
 
     @Test
     public void testMeetsPrerequisiteWithTakenClassNotReceivedMinGrade() {
         Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
-        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(true);
+        when(mockCourseHistory.containsKey(mockCourse)).thenReturn(true);
         when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_MINUS);
         assertFalse(testStudent.meetsPrerequisite(prerequisite));
+        verify(mockCourseHistory).containsKey(mockCourse);
+        verify(mockCourseHistory).get(mockCourse);
     }
 
     @Test
     public void testMeetsPrerequisiteWithAllConditionsMet() {
         Prerequisite prerequisite = new Prerequisite(mockCourse, Grade.C);
-        when(testStudent.meetsPrerequisite(prerequisite)).thenReturn(true);
+        when(mockCourseHistory.containsKey(mockCourse)).thenReturn(true);
         when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_PLUS);
         assertTrue(testStudent.meetsPrerequisite(prerequisite));
+        verify(mockCourseHistory).containsKey(mockCourse);
+        verify(mockCourseHistory).get(mockCourse);
     }
 
     @Test
@@ -96,8 +99,11 @@ public class StudentTest {
         when(mockCourse.getCreditHours()).thenReturn(3);
         testStudent.addCourseGrade(mockCourse, Grade.B_PLUS);
         double expectedGPA = Grade.B_PLUS.gpa;
-        double actualGPA = testStudent.getGPA();
-        assertEquals(expectedGPA, actualGPA, 0.0001);
+
+        when(mockCourse.getCreditHours()).thenReturn(3);
+        assertEquals(expectedGPA, testStudent.getGPA(), 0.0001);
+
+        verify(mockCourse, times(1)).getCreditHours();
     }
 
     @Test
@@ -115,7 +121,9 @@ public class StudentTest {
         testStudent.addCourseGrade(course2, Grade.A_MINUS);
 
         double expectedGPA = (Grade.B_PLUS.gpa * 3 + Grade.A_MINUS.gpa * 4) / 7;
-        double actualGPA = testStudent.getGPA();
-        assertEquals(expectedGPA, actualGPA, 0.0001);
+        assertEquals(expectedGPA, testStudent.getGPA(), 0.0001);
+
+        verify(course1, times(1)).getCreditHours();
+        verify(course2, times(1)).getCreditHours();
     }
 }
