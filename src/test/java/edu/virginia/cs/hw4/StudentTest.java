@@ -89,6 +89,7 @@ public class StudentTest {
     public void testGetGPANoCoursesTaken() {
         when(mockCourseHistory.isEmpty()).thenReturn(true);
         assertThrows(IllegalStateException.class, () -> testStudent.getGPA());
+
     }
     @Test
     public void testGetGPAOneCreditCourse() {
