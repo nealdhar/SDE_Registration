@@ -26,4 +26,10 @@ public class Transcript {
         }
         return false ;
     }
+    public Grade getCourseGrade(Course course) {
+        if (hasCourse(course)) {
+            return courseHistory.get(course);
+        }
+        throw new IllegalArgumentException("ERROR: Student has no grade for " + course);
+    }
 }
