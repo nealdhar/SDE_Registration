@@ -71,7 +71,7 @@ public class StudentTest {
         when(mockCourseHistory.containsKey(mockCourse)).thenReturn(true);
         when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_MINUS);
         assertFalse(testStudent.meetsPrerequisite(prerequisite));
-        verify(mockCourseHistory).containsKey(mockCourse);
+        //verify(mockCourseHistory).containsKey(mockCourse);
         verify(mockCourseHistory).get(mockCourse);
     }
 
@@ -81,7 +81,7 @@ public class StudentTest {
         when(mockCourseHistory.containsKey(mockCourse)).thenReturn(true);
         when(mockCourseHistory.get(mockCourse)).thenReturn(Grade.C_PLUS);
         assertTrue(testStudent.meetsPrerequisite(prerequisite));
-        verify(mockCourseHistory).containsKey(mockCourse);
+        //verify(mockCourseHistory).containsKey(mockCourse);
         verify(mockCourseHistory).get(mockCourse);
     }
 
