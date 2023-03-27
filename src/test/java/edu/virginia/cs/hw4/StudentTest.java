@@ -93,9 +93,9 @@ public class StudentTest {
     }
     @Test
     public void testGetGPAOneCreditCourse() {
-        Map<Course, Grade> courseHistory = new HashMap<>();
-        Transcript transcript = new Transcript(testStudent, courseHistory);
-        testStudent = new Student(1, "Neal", "nd2pvz@virginia.edu", transcript);
+        mockCourseHistory = new HashMap<>();
+        testTranscript = new Transcript(testStudent, mockCourseHistory);
+        testStudent = new Student(1, "Neal", "nd2pvz@virginia.edu", testTranscript);
 
         when(mockCourse.getCreditHours()).thenReturn(3);
         testStudent.addCourseGrade(mockCourse, Grade.B_PLUS);
@@ -109,9 +109,9 @@ public class StudentTest {
 
     @Test
     public void testGetGPAMultipleCourses() {
-        Map<Course, Grade> courseHistory = new HashMap<>();
-        Transcript transcript = new Transcript(testStudent, courseHistory);
-        testStudent = new Student(1, "Neal", "nd2pvz@virginia.edu", transcript);
+        mockCourseHistory = new HashMap<>();
+        testTranscript = new Transcript(testStudent, mockCourseHistory);
+        testStudent = new Student(1, "Neal", "nd2pvz@virginia.edu", testTranscript);
 
         Course course1 = mock(Course.class);
         when(course1.getCreditHours()).thenReturn(3);
