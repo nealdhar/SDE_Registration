@@ -7,15 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegistrationImplTest {
 
     @Test
-    void getCourseCatalog() {
-
-    }
-
-    @Test
-    void setCourseCatalog() {
-    }
-
-    @Test
     void isEnrollmentFull() {
     }
 
