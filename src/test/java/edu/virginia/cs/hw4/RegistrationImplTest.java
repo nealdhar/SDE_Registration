@@ -11,6 +11,7 @@ class RegistrationImplTest {
     private Course mockCourse;
     private RegistrationImpl registration;
     private CourseCatalog courseCatalog;
+    private Course.EnrollmentStatus enrollmentStatus;
 
     @BeforeEach
     public void setUp(){
@@ -49,6 +50,14 @@ class RegistrationImplTest {
 
     @Test
     public void testGetEnrollmentStatusOPEN() {
+        Course.EnrollmentStatus expectedEnrollmentStatus = Course.EnrollmentStatus.OPEN;
+        when(mockCourse.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(20);
+        when(mockCourse.getWaitListCap()).thenReturn(10);
+        when(mockCourse.getCurrentWaitListSize()).thenReturn(5);
+        Course.EnrollmentStatus actualEnrollmentStatus = registration.getEnrollmentStatus(mockCourse);
+        assertEquals(expectedEnrollmentStatus, actualEnrollmentStatus);
+
     }
 
     @Test
