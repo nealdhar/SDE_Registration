@@ -97,18 +97,18 @@ public class RegistrationImpl implements Registration {
             return RegistrationResult.PREREQUISITE_NOT_MET;
         }
         if (!isEnrollmentFull(course)) {
-            if ((course.getCurrentEnrollmentSize() + 1) == course.getEnrollmentCap()) {
+            course.addStudentToEnrolled(student);
+            if (course.getCurrentEnrollmentSize() == course.getEnrollmentCap()) {
                 course.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
             }
-            course.addStudentToEnrolled(student);
             return RegistrationResult.ENROLLED;
 
         }
         if (isEnrollmentFull(course) && !isWaitListFull(course)) {
-            if ((course.getCurrentWaitListSize() + 1) == course.getWaitListCap()) {
+            course.addStudentToWaitList(student);
+            if (course.getCurrentWaitListSize() == course.getWaitListCap()) {
                 course.setEnrollmentStatus(Course.EnrollmentStatus.CLOSED);
             }
-            course.addStudentToWaitList(student);
             return RegistrationResult.WAIT_LISTED;
         }
 
