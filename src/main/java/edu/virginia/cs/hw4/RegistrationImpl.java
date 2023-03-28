@@ -55,7 +55,6 @@ public class RegistrationImpl implements Registration {
 
                 int secondStartTimeInMinutes = second.getMeetingStartTimeHour() * 60 + second.getMeetingStartTimeMinute();
                 int secondEndTimeInMinutes = secondStartTimeInMinutes + second.getMeetingDurationMinutes();
-
                 if (firstStartTimeInMinutes <= secondEndTimeInMinutes && secondStartTimeInMinutes <= firstEndTimeInMinutes) {
                     return true;
                 }
@@ -86,10 +85,12 @@ public class RegistrationImpl implements Registration {
 
     @Override
     public RegistrationResult registerStudentForCourse(Student student, Course course) {
-        return null;
+        course.addStudentToEnrolled(student);
+        return registerStudentForCourse(student, course);
     }
 
     @Override
     public void dropCourse(Student student, Course course){
+        course.removeStudentFromEnrolled(student);
     }
 }
