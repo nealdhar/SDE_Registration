@@ -22,45 +22,54 @@ class RegistrationImplTest {
     }
 
     @Test
-    void isEnrollmentFullWhenCapIsReached() {
+    public void isEnrollmentFullWhenCapIsReached() {
         when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
         when(mockCourse.getEnrollmentCap()).thenReturn(25);
         assertTrue(registration.isEnrollmentFull(mockCourse));
     }
 
     @Test
-    void isEnrollmentFullWhenCapIsNotReached() {
+    public void isEnrollmentFullWhenCapIsNotReached() {
         when(mockCourse.getCurrentEnrollmentSize()).thenReturn(20);
         when(mockCourse.getEnrollmentCap()).thenReturn(25);
         assertFalse(registration.isEnrollmentFull(mockCourse));
     }
+    @Test
+    void isWaitListFullWhenCapIsReached() {
+        when(mockCourse.getCurrentWaitListSize()).thenReturn(10);
+        when(mockCourse.getWaitListCap()).thenReturn(10);
+        assertTrue(registration.isWaitListFull(mockCourse));
+    }
+    @Test
+    void isWaitListFullWhenCapIsNotReached() {
+        when(mockCourse.getCurrentWaitListSize()).thenReturn(5);
+        when(mockCourse.getWaitListCap()).thenReturn(10);
+        assertFalse(registration.isWaitListFull(mockCourse));
+    }
+
 
 
     @Test
-    void isWaitListFull() {
+    public void getEnrollmentStatus() {
     }
 
     @Test
-    void getEnrollmentStatus() {
+    public void areCoursesConflicted() {
     }
 
     @Test
-    void areCoursesConflicted() {
+    public void hasConflictWithStudentSchedule() {
     }
 
     @Test
-    void hasConflictWithStudentSchedule() {
+    public void hasStudentMeetsPrerequisites() {
     }
 
     @Test
-    void hasStudentMeetsPrerequisites() {
+    public void registerStudentForCourse() {
     }
 
     @Test
-    void registerStudentForCourse() {
-    }
-
-    @Test
-    void dropCourse() {
+    public void dropCourse() {
     }
 }
