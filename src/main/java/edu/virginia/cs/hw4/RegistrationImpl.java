@@ -110,7 +110,32 @@ public class RegistrationImpl implements Registration {
     }
 
     @Override
-    public void dropCourse(Student student, Course course){
+    public void dropCourse(Student student, Course course) {
+        if (!course.isStudentEnrolled(student) && !course.isStudentWaitListed(student)) {
+            throw new IllegalArgumentException("Student is not enrolled or wait-listed in the course");
+        }
 
+        if (course.isStudentEnrolled(student)) {
+            course.removeStudentFromEnrolled(student);
+            if (course.getEnrollmentStatus() == Course.EnrollmentStatus.WAIT_LIST) {
+                if (!course.isWaitListEmpty()) {
+                    Student firstWaitListedStudent = course.getFirstStudentOnWaitList();
+                    course.addStudentToEnrolled(firstWaitListedStudent);
+                } else {
+                    course.setEnrollmentStatus(Course.EnrollmentStatus.OPEN);
+                }
+            } else if (!isEnrollmentFull(course)) { // enroll student from wait list is enrollment is not full
+                if (!course.isWaitListEmpty()) {
+                    Student firstWaitListedStudent = course.getFirstStudentOnWaitList();
+                    course.addStudentToEnrolled(firstWaitListedStudent);
+                    course.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
+                }
+            }
+        } else if (course.isStudentWaitListed(student)) {
+            course.removeStudentFromWaitList(student);
+            if (course.getEnrollmentStatus() == Course.EnrollmentStatus.CLOSED) {
+                course.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
+            }
+        }
     }
 }
