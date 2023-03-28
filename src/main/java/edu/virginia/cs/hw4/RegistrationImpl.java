@@ -61,7 +61,7 @@ public class RegistrationImpl implements Registration {
 
     @Override
     public boolean hasConflictWithStudentSchedule(Course course, Student student) {
-        for(Course enrolledCourse: courseCatalog.getCoursesEnrolledIn(student)) {
+        for(Course enrolledCourse : courseCatalog.getCoursesEnrolledIn(student)) {
             if(areCoursesConflicted(course, enrolledCourse)) {
                 return true;
             }
