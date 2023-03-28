@@ -4,7 +4,6 @@ public class Student {
     private int studentNumber;
     private String name;
     private String email;
-
     private Transcript transcript;
 
     public Student(int studentNumber, String name, String email) {
@@ -50,7 +49,7 @@ public class Student {
     }
 
     public boolean hasStudentTakenCourse(Course course) {
-        return transcript.hasCourse(course);
+        return transcript.courseHistory.containsKey(course);
     }
 
     public Grade getCourseGrade(Course course) {
