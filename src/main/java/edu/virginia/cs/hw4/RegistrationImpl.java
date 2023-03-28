@@ -100,6 +100,7 @@ public class RegistrationImpl implements Registration {
             if ((course.getCurrentEnrollmentSize() + 1) == course.getEnrollmentCap()) {
                 course.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
             }
+            course.addStudentToEnrolled(student);
             return RegistrationResult.ENROLLED;
 
         }
@@ -107,14 +108,15 @@ public class RegistrationImpl implements Registration {
             if ((course.getCurrentWaitListSize() + 1) == course.getWaitListCap()) {
                 course.setEnrollmentStatus(Course.EnrollmentStatus.CLOSED);
             }
+            course.addStudentToWaitList(student);
             return RegistrationResult.WAIT_LISTED;
         }
-        course.addStudentToEnrolled(student);
+
         return registerStudentForCourse(student, course);
     }
 
     @Override
     public void dropCourse(Student student, Course course){
-        course.removeStudentFromEnrolled(student);
+
     }
 }
