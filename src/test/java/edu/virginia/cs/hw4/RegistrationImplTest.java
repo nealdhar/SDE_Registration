@@ -62,9 +62,23 @@ class RegistrationImplTest {
 
     @Test
     public void testGetEnrollmentStatusWAIT_LIST() {
+        Course.EnrollmentStatus expectedEnrollmentStatus = Course.EnrollmentStatus.WAIT_LIST;
+        when(mockCourse.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
+        when(mockCourse.getWaitListCap()).thenReturn(10);
+        when(mockCourse.getCurrentWaitListSize()).thenReturn(5);
+        Course.EnrollmentStatus actualEnrollmentStatus = registration.getEnrollmentStatus(mockCourse);
+        assertEquals(expectedEnrollmentStatus, actualEnrollmentStatus);
     }
     @Test
     public void testGetEnrollmentStatusCLOSED() {
+        Course.EnrollmentStatus expectedEnrollmentStatus = Course.EnrollmentStatus.CLOSED;
+        when(mockCourse.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
+        when(mockCourse.getWaitListCap()).thenReturn(10);
+        when(mockCourse.getCurrentWaitListSize()).thenReturn(10);
+        Course.EnrollmentStatus actualEnrollmentStatus = registration.getEnrollmentStatus(mockCourse);
+        assertEquals(expectedEnrollmentStatus, actualEnrollmentStatus);
     }
 
     @Test
