@@ -52,7 +52,6 @@ public class RegistrationImpl implements Registration {
             if (second.getMeetingDays().contains(day)) {
                 int firstStartTimeInMinutes = first.getMeetingStartTimeHour() * 60 + first.getMeetingStartTimeMinute();
                 int firstEndTimeInMinutes = firstStartTimeInMinutes + first.getMeetingDurationMinutes();
-
                 int secondStartTimeInMinutes = second.getMeetingStartTimeHour() * 60 + second.getMeetingStartTimeMinute();
                 int secondEndTimeInMinutes = secondStartTimeInMinutes + second.getMeetingDurationMinutes();
                 if (firstStartTimeInMinutes <= secondEndTimeInMinutes && secondStartTimeInMinutes <= firstEndTimeInMinutes) {
@@ -85,6 +84,31 @@ public class RegistrationImpl implements Registration {
 
     @Override
     public RegistrationResult registerStudentForCourse(Student student, Course course) {
+        if (course.getEnrollmentStatus() == Course.EnrollmentStatus.CLOSED) {
+            return RegistrationResult.COURSE_CLOSED;
+        }
+        if (isEnrollmentFull(course) == true && isWaitListFull(course) == true) {
+            return RegistrationResult.COURSE_FULL;
+        }
+        if (hasConflictWithStudentSchedule(course, student)) {
+            return RegistrationResult.SCHEDULE_CONFLICT;
+        }
+        if (!hasStudentMeetsPrerequisites(student, course.getPrerequisites())) {
+            return RegistrationResult.PREREQUISITE_NOT_MET;
+        }
+        if (!isEnrollmentFull(course)) {
+            if ((course.getCurrentEnrollmentSize() + 1) == course.getEnrollmentCap()) {
+                course.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
+            }
+            return RegistrationResult.ENROLLED;
+
+        }
+        if (isEnrollmentFull(course) && !isWaitListFull(course)) {
+            if ((course.getCurrentWaitListSize() + 1) == course.getWaitListCap()) {
+                course.setEnrollmentStatus(Course.EnrollmentStatus.CLOSED);
+            }
+            return RegistrationResult.WAIT_LISTED;
+        }
         course.addStudentToEnrolled(student);
         return registerStudentForCourse(student, course);
     }
