@@ -22,54 +22,59 @@ class RegistrationImplTest {
     }
 
     @Test
-    public void isEnrollmentFullWhenCapIsReached() {
+    public void testIsEnrollmentFullWhenCapIsReached() {
         when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
         when(mockCourse.getEnrollmentCap()).thenReturn(25);
         assertTrue(registration.isEnrollmentFull(mockCourse));
     }
 
     @Test
-    public void isEnrollmentFullWhenCapIsNotReached() {
+    public void testIsEnrollmentFullWhenCapIsNotReached() {
         when(mockCourse.getCurrentEnrollmentSize()).thenReturn(20);
         when(mockCourse.getEnrollmentCap()).thenReturn(25);
         assertFalse(registration.isEnrollmentFull(mockCourse));
     }
     @Test
-    void isWaitListFullWhenCapIsReached() {
+    void testIsWaitListFullWhenCapIsReached() {
         when(mockCourse.getCurrentWaitListSize()).thenReturn(10);
         when(mockCourse.getWaitListCap()).thenReturn(10);
         assertTrue(registration.isWaitListFull(mockCourse));
     }
     @Test
-    void isWaitListFullWhenCapIsNotReached() {
+    void testIsWaitListFullWhenCapIsNotReached() {
         when(mockCourse.getCurrentWaitListSize()).thenReturn(5);
         when(mockCourse.getWaitListCap()).thenReturn(10);
         assertFalse(registration.isWaitListFull(mockCourse));
     }
 
-
-
     @Test
-    public void getEnrollmentStatus() {
+    public void testGetEnrollmentStatusOPEN() {
     }
 
     @Test
-    public void areCoursesConflicted() {
+    public void testGetEnrollmentStatusWAIT_LIST() {
+    }
+    @Test
+    public void testGetEnrollmentStatusCLOSED() {
     }
 
     @Test
-    public void hasConflictWithStudentSchedule() {
+    public void TestAreCoursesConflicted() {
     }
 
     @Test
-    public void hasStudentMeetsPrerequisites() {
+    public void TestHasConflictWithStudentSchedule() {
     }
 
     @Test
-    public void registerStudentForCourse() {
+    public void TestHasStudentMeetsPrerequisites() {
     }
 
     @Test
-    public void dropCourse() {
+    public void TestRegisterStudentForCourse() {
+    }
+
+    @Test
+    public void TestDropCourse() {
     }
 }
