@@ -4,7 +4,6 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 public class RegistrationImpl implements Registration {
-    //TODO: Implement class
     private CourseCatalog courseCatalog ;
 
     @Override
@@ -35,13 +34,11 @@ public class RegistrationImpl implements Registration {
 
     @Override
     public Course.EnrollmentStatus getEnrollmentStatus(Course course) {
-        if(course.getCurrentEnrollmentSize() < course.getEnrollmentCap()) {
+        if (!isEnrollmentFull(course)) {
             return Course.EnrollmentStatus.OPEN;
-        }
-        else if (!isWaitListFull(course)) {
+        } else if (isEnrollmentFull(course) && !isWaitListFull(course)) {
             return Course.EnrollmentStatus.WAIT_LIST;
-        }
-        else {
+        } else {
             return Course.EnrollmentStatus.CLOSED;
         }
     }
@@ -87,7 +84,7 @@ public class RegistrationImpl implements Registration {
         if (course.getEnrollmentStatus() == Course.EnrollmentStatus.CLOSED) {
             return RegistrationResult.COURSE_CLOSED;
         }
-        if (isEnrollmentFull(course) == true && isWaitListFull(course) == true) {
+        if (isEnrollmentFull(course) && isWaitListFull(course)) {
             return RegistrationResult.COURSE_FULL;
         }
         if (hasConflictWithStudentSchedule(course, student)) {
@@ -98,21 +95,18 @@ public class RegistrationImpl implements Registration {
         }
         if (!isEnrollmentFull(course)) {
             course.addStudentToEnrolled(student);
-            if (course.getCurrentEnrollmentSize() == course.getEnrollmentCap()) {
+            if (isEnrollmentFull(course)) {
                 course.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
             }
             return RegistrationResult.ENROLLED;
 
-        }
-        if (isEnrollmentFull(course) && !isWaitListFull(course)) {
+        } else {
             course.addStudentToWaitList(student);
-            if (course.getCurrentWaitListSize() == course.getWaitListCap()) {
+            if (isWaitListFull(course)) {
                 course.setEnrollmentStatus(Course.EnrollmentStatus.CLOSED);
             }
             return RegistrationResult.WAIT_LISTED;
         }
-
-        return registerStudentForCourse(student, course);
     }
 
     @Override
