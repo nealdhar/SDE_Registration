@@ -50,11 +50,13 @@ public class RegistrationImpl implements Registration {
     public boolean areCoursesConflicted(Course first, Course second) {
         for (DayOfWeek day : first.getMeetingDays()) {
             if (second.getMeetingDays().contains(day)) {
-                int firstStart = first.getMeetingStartTimeHour() * 60 + first.getMeetingStartTimeMinute();
-                int firstEnd = firstStart + first.getMeetingDurationMinutes();
-                int secondStart = second.getMeetingStartTimeHour() * 60 + second.getMeetingStartTimeMinute();
-                int secondEnd = secondStart + second.getMeetingDurationMinutes();
-                if (firstStart <= secondEnd && secondStart <= firstEnd) {
+                int firstStartTimeInMinutes = first.getMeetingStartTimeHour() * 60 + first.getMeetingStartTimeMinute();
+                int firstEndTimeInMinutes = firstStartTimeInMinutes + first.getMeetingDurationMinutes();
+
+                int secondStartTimeInMinutes = second.getMeetingStartTimeHour() * 60 + second.getMeetingStartTimeMinute();
+                int secondEndTimeInMinutes = secondStartTimeInMinutes + second.getMeetingDurationMinutes();
+
+                if (firstStartTimeInMinutes <= secondEndTimeInMinutes && secondStartTimeInMinutes <= firstEndTimeInMinutes) {
                     return true;
                 }
             }
@@ -64,8 +66,8 @@ public class RegistrationImpl implements Registration {
 
     @Override
     public boolean hasConflictWithStudentSchedule(Course course, Student student) {
-        for(Student studentEnrolledInCourse: course.getEnrolledStudents()) {
-            if(studentEnrolledInCourse.hasStudentTakenCourse(course) == course.isStudentEnrolled(student)) {
+        for(Course enrolledCourse: courseCatalog.getCoursesEnrolledIn(student)) {
+            if(areCoursesConflicted(course, enrolledCourse)) {
                 return true;
             }
         }
@@ -74,12 +76,17 @@ public class RegistrationImpl implements Registration {
 
     @Override
     public boolean hasStudentMeetsPrerequisites(Student student, List<Prerequisite> prerequisites) {
+        for (Prerequisite prerequisite : prerequisites) {
+            if (!student.hasStudentTakenCourse(prerequisite.course)) { //!student.meetsPrerequisite(course)
+                return false;
+            }
+        }
         return true;
     }
 
     @Override
     public RegistrationResult registerStudentForCourse(Student student, Course course) {
-       return null;
+        return null;
     }
 
     @Override
