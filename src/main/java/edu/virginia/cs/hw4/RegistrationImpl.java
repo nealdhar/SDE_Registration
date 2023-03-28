@@ -64,6 +64,11 @@ public class RegistrationImpl implements Registration {
 
     @Override
     public boolean hasConflictWithStudentSchedule(Course course, Student student) {
+        for(Student studentEnrolledInCourse: course.getEnrolledStudents()) {
+            if(studentEnrolledInCourse.hasStudentTakenCourse(course) == course.isStudentEnrolled(student)) {
+                return true;
+            }
+        }
         return false;
     }
 
