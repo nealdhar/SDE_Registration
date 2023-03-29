@@ -51,7 +51,7 @@ public class RegistrationImpl implements Registration {
                 int firstEndTimeInMinutes = firstStartTimeInMinutes + first.getMeetingDurationMinutes();
                 int secondStartTimeInMinutes = second.getMeetingStartTimeHour() * 60 + second.getMeetingStartTimeMinute();
                 int secondEndTimeInMinutes = secondStartTimeInMinutes + second.getMeetingDurationMinutes();
-                if (firstStartTimeInMinutes <= secondEndTimeInMinutes && secondStartTimeInMinutes <= firstEndTimeInMinutes) {
+                if (firstStartTimeInMinutes < secondEndTimeInMinutes && secondStartTimeInMinutes < firstEndTimeInMinutes) {
                     return true;
                 }
             }
