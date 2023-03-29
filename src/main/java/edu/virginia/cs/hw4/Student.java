@@ -49,7 +49,7 @@ public class Student {
     }
 
     public boolean hasStudentTakenCourse(Course course) {
-        return transcript.courseHistory.containsKey(course);
+        return transcript.hasCourse(course);
     }
 
     public Grade getCourseGrade(Course course) {

@@ -4,21 +4,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class RegistrationImplTest {
+public class RegistrationImplTest {
     private Student mockStudent;
     private Course mockCourse;
+    private Course mockCourse1;
+    private Course mockCourse2;
+    private Course mockCourse3;
     private RegistrationImpl registration;
     private CourseCatalog courseCatalog;
-    private Course.EnrollmentStatus enrollmentStatus;
+    private Prerequisite prerequisite;
 
     @BeforeEach
     public void setUp(){
         mockCourse = mock(Course.class);
+        mockCourse1 = mock(Course.class);
+        mockCourse2 = mock(Course.class);
+        mockCourse3 = mock(Course.class);
         mockStudent = mock(Student.class);
         courseCatalog = mock(CourseCatalog.class);
         registration = new RegistrationImpl();
@@ -27,188 +34,200 @@ class RegistrationImplTest {
 
     @Test
     public void testIsEnrollmentFullWhenCapIsReached() {
-        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
-        when(mockCourse.getEnrollmentCap()).thenReturn(25);
-        assertTrue(registration.isEnrollmentFull(mockCourse));
+        when(mockCourse1.getCurrentEnrollmentSize()).thenReturn(25);
+        when(mockCourse1.getEnrollmentCap()).thenReturn(25);
+        assertTrue(registration.isEnrollmentFull(mockCourse1));
     }
 
     @Test
     public void testIsEnrollmentFullWhenCapIsNotReached() {
-        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(20);
-        when(mockCourse.getEnrollmentCap()).thenReturn(25);
-        assertFalse(registration.isEnrollmentFull(mockCourse));
+        when(mockCourse2.getCurrentEnrollmentSize()).thenReturn(20);
+        when(mockCourse2.getEnrollmentCap()).thenReturn(25);
+        assertFalse(registration.isEnrollmentFull(mockCourse2));
     }
     @Test
     void testIsWaitListFullWhenCapIsReached() {
-        when(mockCourse.getCurrentWaitListSize()).thenReturn(10);
-        when(mockCourse.getWaitListCap()).thenReturn(10);
-        assertTrue(registration.isWaitListFull(mockCourse));
+        when(mockCourse1.getCurrentWaitListSize()).thenReturn(10);
+        when(mockCourse1.getWaitListCap()).thenReturn(10);
+        assertTrue(registration.isWaitListFull(mockCourse1));
     }
     @Test
     void testIsWaitListFullWhenCapIsNotReached() {
-        when(mockCourse.getCurrentWaitListSize()).thenReturn(5);
-        when(mockCourse.getWaitListCap()).thenReturn(10);
-        assertFalse(registration.isWaitListFull(mockCourse));
+        when(mockCourse3.getCurrentWaitListSize()).thenReturn(5);
+        when(mockCourse3.getWaitListCap()).thenReturn(10);
+        assertFalse(registration.isWaitListFull(mockCourse3));
     }
 
     @Test
     public void testGetEnrollmentStatusOPEN() {
-        when(mockCourse.getEnrollmentCap()).thenReturn(25);
-        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(20);
-        when(mockCourse.getWaitListCap()).thenReturn(10);
-        when(mockCourse.getCurrentWaitListSize()).thenReturn(5);
-
-        Course.EnrollmentStatus expectedEnrollmentStatus = Course.EnrollmentStatus.OPEN;
-        Course.EnrollmentStatus actualEnrollmentStatus = registration.getEnrollmentStatus(mockCourse);
-        assertEquals(expectedEnrollmentStatus, actualEnrollmentStatus);
+        when(mockCourse1.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse1.getCurrentEnrollmentSize()).thenReturn(20);
+        when(mockCourse1.getWaitListCap()).thenReturn(10);
+        when(mockCourse1.getCurrentWaitListSize()).thenReturn(5);
+        assertEquals(Course.EnrollmentStatus.OPEN, registration.getEnrollmentStatus(mockCourse1));
 
     }
 
     @Test
     public void testGetEnrollmentStatusWAIT_LIST() {
-        when(mockCourse.getEnrollmentCap()).thenReturn(25);
-        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
-        when(mockCourse.getWaitListCap()).thenReturn(10);
-        when(mockCourse.getCurrentWaitListSize()).thenReturn(5);
-
-        Course.EnrollmentStatus expectedEnrollmentStatus = Course.EnrollmentStatus.WAIT_LIST;
-        Course.EnrollmentStatus actualEnrollmentStatus = registration.getEnrollmentStatus(mockCourse);
-        assertEquals(expectedEnrollmentStatus, actualEnrollmentStatus);
+        when(mockCourse2.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse2.getCurrentEnrollmentSize()).thenReturn(25);
+        when(mockCourse2.getWaitListCap()).thenReturn(10);
+        when(mockCourse2.getCurrentWaitListSize()).thenReturn(5);
+        assertEquals(Course.EnrollmentStatus.WAIT_LIST, registration.getEnrollmentStatus(mockCourse2));
     }
     @Test
     public void testGetEnrollmentStatusCLOSED() {
-        when(mockCourse.getEnrollmentCap()).thenReturn(25);
-        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
-        when(mockCourse.getWaitListCap()).thenReturn(10);
-        when(mockCourse.getCurrentWaitListSize()).thenReturn(10);
-
-        Course.EnrollmentStatus expectedEnrollmentStatus = Course.EnrollmentStatus.CLOSED;
-        Course.EnrollmentStatus actualEnrollmentStatus = registration.getEnrollmentStatus(mockCourse);
-        assertEquals(expectedEnrollmentStatus, actualEnrollmentStatus);
+        when(mockCourse3.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse3.getCurrentEnrollmentSize()).thenReturn(25);
+        when(mockCourse3.getWaitListCap()).thenReturn(10);
+        when(mockCourse3.getCurrentWaitListSize()).thenReturn(10);
+        assertEquals(Course.EnrollmentStatus.CLOSED, registration.getEnrollmentStatus(mockCourse3));
     }
 
     @Test
-    public void TestAreCoursesConflictedWithNoOverlap() {
-        Course first = mock(Course.class);
-        when(first.getMeetingDays()).thenReturn(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
-        when(first.getMeetingStartTimeHour()).thenReturn(8);
-        when(first.getMeetingStartTimeMinute()).thenReturn(0);
-        when(first.getMeetingDurationMinutes()).thenReturn(90);
+    public void testAreCoursesConflictedWithNoOverlap() {
+        when(mockCourse1.getMeetingDays()).thenReturn(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
+        when(mockCourse1.getMeetingStartTimeHour()).thenReturn(8);
+        when(mockCourse1.getMeetingStartTimeMinute()).thenReturn(0);
+        when(mockCourse1.getMeetingDurationMinutes()).thenReturn(90);
+        
+        
+        when(mockCourse2.getMeetingDays()).thenReturn(List.of(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY));
+        when(mockCourse2.getMeetingStartTimeHour()).thenReturn(9);
+        when(mockCourse2.getMeetingStartTimeMinute()).thenReturn(31);
+        when(mockCourse2.getMeetingDurationMinutes()).thenReturn(90);
 
-        Course second = mock(Course.class);
-        when(second.getMeetingDays()).thenReturn(List.of(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY));
-        when(second.getMeetingStartTimeHour()).thenReturn(9);
-        when(second.getMeetingStartTimeMinute()).thenReturn(31);
-        when(second.getMeetingDurationMinutes()).thenReturn(90);
-
-        assertFalse(registration.areCoursesConflicted(first, second));
+        assertFalse(registration.areCoursesConflicted(mockCourse1, mockCourse2));
     }
 
     @Test
-    public void TestAreCoursesConflictedWithOverlap() {
-        Course first = mock(Course.class);
-        when(first.getMeetingDays()).thenReturn(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
-        when(first.getMeetingStartTimeHour()).thenReturn(12);
-        when(first.getMeetingStartTimeMinute()).thenReturn(30);
-        when(first.getMeetingDurationMinutes()).thenReturn(75);
+    public void testAreCoursesConflictedWithOverlap() {
+        when(mockCourse2.getMeetingDays()).thenReturn(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
+        when(mockCourse2.getMeetingStartTimeHour()).thenReturn(12);
+        when(mockCourse2.getMeetingStartTimeMinute()).thenReturn(30);
+        when(mockCourse2.getMeetingDurationMinutes()).thenReturn(75);
+        
+        when(mockCourse3.getMeetingDays()).thenReturn(List.of(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY));
+        when(mockCourse3.getMeetingStartTimeHour()).thenReturn(11);
+        when(mockCourse3.getMeetingStartTimeMinute()).thenReturn(40);
+        when(mockCourse3.getMeetingDurationMinutes()).thenReturn(60);
 
-        Course second = mock(Course.class);
-        when(second.getMeetingDays()).thenReturn(List.of(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY));
-        when(second.getMeetingStartTimeHour()).thenReturn(11);
-        when(second.getMeetingStartTimeMinute()).thenReturn(40);
-        when(second.getMeetingDurationMinutes()).thenReturn(60);
-
-        assertTrue(registration.areCoursesConflicted(first, second));
+        assertTrue(registration.areCoursesConflicted(mockCourse2, mockCourse3));
     }
 
     @Test
-    public void TestHasConflictWithStudentScheduleTrue() {
-        Course enrolledCourse1 = mock(Course.class);
-        Course enrolledCourse2 = mock(Course.class);
-        when(courseCatalog.getCoursesEnrolledIn(mockStudent)).thenReturn(List.of(enrolledCourse1, enrolledCourse2));
+    public void testHasConflictWithStudentSchedule_WithConflict() {
+        when(courseCatalog.getCoursesEnrolledIn(mockStudent)).thenReturn(List.of(mockCourse1, mockCourse2));
 
         when(mockCourse.getMeetingDays()).thenReturn(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
         when(mockCourse.getMeetingDurationMinutes()).thenReturn(12);
         when(mockCourse.getMeetingStartTimeMinute()).thenReturn(30);
         when(mockCourse.getMeetingDurationMinutes()).thenReturn(75);
 
-        when(enrolledCourse1.getMeetingDays()).thenReturn(List.of(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY));
-        when(enrolledCourse1.getMeetingDurationMinutes()).thenReturn(11);
-        when(enrolledCourse1.getMeetingStartTimeMinute()).thenReturn(40);
-        when(enrolledCourse1.getMeetingDurationMinutes()).thenReturn(60);
+        when(mockCourse1.getMeetingDays()).thenReturn(List.of(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY));
+        when(mockCourse1.getMeetingDurationMinutes()).thenReturn(11);
+        when(mockCourse1.getMeetingStartTimeMinute()).thenReturn(40);
+        when(mockCourse1.getMeetingDurationMinutes()).thenReturn(60);
 
-        registration.areCoursesConflicted(enrolledCourse1, mockCourse);
+        registration.areCoursesConflicted(mockCourse1, mockCourse);
         assertTrue(registration.hasConflictWithStudentSchedule(mockCourse, mockStudent));
     }
 
     @Test
-    public void TestHasConflictWithStudentScheduleFalse() {
-        Course enrolledCourse1 = mock(Course.class);
-        Course enrolledCourse2 = mock(Course.class);
-        when(courseCatalog.getCoursesEnrolledIn(mockStudent)).thenReturn(List.of(enrolledCourse1, enrolledCourse2));
+    public void testHasConflictWithStudentSchedule_NoConflict() {
+        when(courseCatalog.getCoursesEnrolledIn(mockStudent)).thenReturn(List.of(mockCourse1, mockCourse2));
 
         when(mockCourse.getMeetingDays()).thenReturn(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
-        when(mockCourse.getMeetingDurationMinutes()).thenReturn(8);
-        when(mockCourse.getMeetingStartTimeMinute()).thenReturn(0);
-        when(mockCourse.getMeetingDurationMinutes()).thenReturn(90);
+        when(mockCourse.getMeetingDurationMinutes()).thenReturn(12);
+        when(mockCourse.getMeetingStartTimeMinute()).thenReturn(30);
+        when(mockCourse.getMeetingDurationMinutes()).thenReturn(75);
 
-        when(enrolledCourse1.getMeetingDays()).thenReturn(List.of(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY));
-        when(enrolledCourse1.getMeetingDurationMinutes()).thenReturn(5);
-        when(enrolledCourse1.getMeetingStartTimeMinute()).thenReturn(0);
-        when(enrolledCourse1.getMeetingDurationMinutes()).thenReturn(90);
+        when(mockCourse1.getMeetingDays()).thenReturn(List.of(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY));
+        when(mockCourse1.getMeetingDurationMinutes()).thenReturn(5);
+        when(mockCourse1.getMeetingStartTimeMinute()).thenReturn(40);
+        when(mockCourse1.getMeetingDurationMinutes()).thenReturn(60);
 
-        registration.areCoursesConflicted(enrolledCourse1, mockCourse);
         assertFalse(registration.hasConflictWithStudentSchedule(mockCourse, mockStudent));
     }
 
     @Test
-    public void TestHasStudentMeetsPrerequisitesTrue() {
+    public void testHasStudentMeetsPrerequisitesTrue() {
+        when(mockCourse1.getDepartment()).thenReturn("CS");
+        when(mockCourse1.getCatalogNumber()).thenReturn(2100);
+        when(mockCourse2.getDepartment()).thenReturn("CS");
+        when(mockCourse2.getCatalogNumber()).thenReturn(1110);
+
+        when(mockStudent.hasStudentTakenCourse(mockCourse1)).thenReturn(true);
+        when(mockStudent.hasStudentTakenCourse(mockCourse2)).thenReturn(true);
+
+        List<Prerequisite> prerequisites = List.of( new Prerequisite(mockCourse1, Grade.C),
+                new Prerequisite(mockCourse2, Grade.B));
+        assertTrue(registration.hasStudentMeetsPrerequisites(mockStudent, prerequisites));
+
     }
 
     @Test
-    public void TestHasStudentMeetsPrerequisitesFalse() {
+    public void testHasStudentMeetsPrerequisitesFalse() {
+        when(mockCourse1.getDepartment()).thenReturn("CS");
+        when(mockCourse1.getCatalogNumber()).thenReturn(2100);
+        when(mockCourse2.getDepartment()).thenReturn("CS");
+        when(mockCourse2.getCatalogNumber()).thenReturn(1110);
+
+        when(mockStudent.hasStudentTakenCourse(mockCourse1)).thenReturn(false);
+        when(mockStudent.hasStudentTakenCourse(mockCourse2)).thenReturn(false);
+
+        List<Prerequisite> prerequisites = List.of( new Prerequisite(mockCourse1, Grade.C),
+                new Prerequisite(mockCourse2, Grade.B));
+        assertFalse(registration.hasStudentMeetsPrerequisites(mockStudent, prerequisites));
     }
 
     @Test
-    public void TestRegisterStudentForCourseCLOSED() {
+    public void testRegisterStudentForCourseCLOSED() {
         when(mockCourse.getEnrollmentStatus()).thenReturn(Course.EnrollmentStatus.CLOSED);
         assertEquals(RegistrationResult.COURSE_CLOSED, registration.registerStudentForCourse(mockStudent, mockCourse));
     }
 
     @Test
-    public void TestRegisterStudentForCourseFULL() {
-        when(mockCourse.getEnrollmentCap()).thenReturn(25);
-        when(mockCourse.getCurrentEnrollmentSize()).thenReturn(25);
-        when(mockCourse.getWaitListCap()).thenReturn(10);
-        when(mockCourse.getCurrentWaitListSize()).thenReturn(10);
-       // assertTrue(registration.isEnrollmentFull(mockCourse));
-       // assertTrue(registration.isWaitListFull(mockCourse));
-        assertEquals(RegistrationResult.COURSE_FULL, registration.registerStudentForCourse(mockStudent, mockCourse));
+    public void testRegisterStudentForCourseFULL() {
+        when(mockCourse2.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse2.getCurrentEnrollmentSize()).thenReturn(25);
+        when(mockCourse2.getWaitListCap()).thenReturn(5);
+        when(mockCourse2.getCurrentWaitListSize()).thenReturn(10);
+        doNothing().when(mockCourse2).addStudentToWaitList(mockStudent);
+        assertEquals(RegistrationResult.COURSE_FULL, registration.registerStudentForCourse(mockStudent, mockCourse2));
     }
 
     @Test
-    public void TestRegisterStudentForCourseSCHEDULECONFLICT() {
+    public void testRegisterStudentForCourseSCHEDULECONFLICT() {
        // when(mockCourse.getEnrollmentStatus()).thenReturn(Course.EnrollmentStatus.CLOSED);
        // assertEquals(RegistrationResult.SCHEDULE_CONFLICT, registration.registerStudentForCourse(mockStudent, mockCourse));
     }
 
     @Test
-    public void TestRegisterStudentForCoursePREREQNOTMET() {
+    public void testRegisterStudentForCoursePREREQNOTMET() {
     }
 
     @Test
-    public void TestRegisterStudentForCourseWAITLIST() {
+    public void testRegisterStudentForCourseWAITLIST() {
+
     }
 
     @Test
-    public void TestRegisterStudentForCourseENROLLED() {
+    public void testRegisterStudentForCourseENROLLED() {
+        when(mockCourse2.getEnrollmentCap()).thenReturn(25);
+        when(mockCourse2.getCurrentEnrollmentSize()).thenReturn(20);
+        when(mockCourse2.getWaitListCap()).thenReturn(0);
+        when(mockCourse2.getCurrentWaitListSize()).thenReturn(0);
+        doNothing().when(mockCourse2).addStudentToEnrolled(mockStudent);
+        assertEquals(RegistrationResult.ENROLLED, registration.registerStudentForCourse(mockStudent, mockCourse2));
     }
 
     @Test
-    public void TestDropCourseWhenEnrolled() {
+    public void testDropCourseWhenEnrolled() {
     }
 
     @Test
-    public void TestDropCourseWhenWaitlisted() {
+    public void testDropCourseWhenWaitlisted() {
     }
 }
