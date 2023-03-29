@@ -210,16 +210,16 @@ public class RegistrationImplTest {
 
     @Test
     public void testRegisterStudentForCourseWAITLIST() {
-       /*
+
         when(mockCourse2.getEnrollmentCap()).thenReturn(25);
         when(mockCourse2.getCurrentEnrollmentSize()).thenReturn(24);
-        when(mockCourse2.getWaitListCap()).thenReturn(0);
+        when(mockCourse2.getWaitListCap()).thenReturn(10);
         when(mockCourse2.getCurrentWaitListSize()).thenReturn(0);
-        doNothing().when(mockCourse2).addStudentToWaitList(mockStudent);
+        mockCourse.addStudentToWaitList(mockStudent);
         when(mockCourse2.getEnrollmentCap()).thenReturn(25);
         when(mockCourse2.getCurrentEnrollmentSize()).thenReturn(25);
         assertEquals(RegistrationResult.WAIT_LISTED, registration.registerStudentForCourse(mockStudent, mockCourse2));
-        */
+
 
     }
 
