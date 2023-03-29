@@ -121,14 +121,9 @@ public class RegistrationImpl implements Registration {
                 if (!course.isWaitListEmpty()) {
                     Student firstWaitListedStudent = course.getFirstStudentOnWaitList();
                     course.addStudentToEnrolled(firstWaitListedStudent);
-                } else {
-                    course.setEnrollmentStatus(Course.EnrollmentStatus.OPEN);
-                }
-            } else if (!isEnrollmentFull(course)) { // enroll student from wait list is enrollment is not full
-                if (!course.isWaitListEmpty()) {
-                    Student firstWaitListedStudent = course.getFirstStudentOnWaitList();
-                    course.addStudentToEnrolled(firstWaitListedStudent);
                     course.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
+                } else if (!isEnrollmentFull(course)) { // enroll student from wait list is enrollment is not full
+                    course.setEnrollmentStatus(Course.EnrollmentStatus.OPEN);
                 }
             }
         } else if (course.isStudentWaitListed(student)) {
