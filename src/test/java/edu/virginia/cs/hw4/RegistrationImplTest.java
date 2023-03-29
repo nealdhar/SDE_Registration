@@ -241,11 +241,22 @@ public class RegistrationImplTest {
     }
     @Test
     public void testDropCourseWhenEnrolled() {
-
+        Student waitListStudent = mock(Student.class);
+        when(mockCourse.isStudentEnrolled(mockStudent)).thenReturn(true);
+        when(mockCourse.getEnrollmentStatus()).thenReturn(Course.EnrollmentStatus.WAIT_LIST);
+        when(mockCourse.isWaitListEmpty()).thenReturn(false);
+        when(mockCourse.getFirstStudentOnWaitList()).thenReturn(waitListStudent);
+        mockCourse.addStudentToEnrolled(waitListStudent);
+        registration.dropCourse(mockStudent, mockCourse);
+        //assertTrue(mockCourse.isStudentEnrolled(waitListStudent));
     }
 
     @Test
     public void testDropCourseWhenWaitlisted() {
-
+        when(mockCourse.isStudentWaitListed(mockStudent)).thenReturn(true);
+        registration.dropCourse(mockStudent, mockCourse);
+        when(mockCourse.getEnrollmentStatus()).thenReturn(Course.EnrollmentStatus.CLOSED);
+        mockCourse.setEnrollmentStatus(Course.EnrollmentStatus.WAIT_LIST);
+        //assertEquals(Course.EnrollmentStatus.WAIT_LIST, registration.getEnrollmentStatus(mockCourse));
     }
 }
